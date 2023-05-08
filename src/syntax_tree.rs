@@ -70,7 +70,12 @@ impl<T> SyntaxTree<T> {
         if predicate(self) {
             Some(self)
         } else {
-            todo!()
+            for child in self.children.iter() {
+                if let Some(found) = child.find_node(predicate) {
+                    return Some(found)
+                } 
+            }
+        None
         }
     }
 
@@ -80,8 +85,17 @@ impl<T> SyntaxTree<T> {
     pub fn find_node_mut(
         &mut self,
         predicate: fn(&SyntaxTree<T>) -> bool,
-    ) -> Option<&SyntaxTree<T>> {
-        todo!()
+    ) -> Option<&mut SyntaxTree<T>> {
+        if predicate(self) {
+            Some(self)
+        } else {
+            for child in self.children.iter_mut() {
+                if let Some(found) = child.find_node_mut(predicate) {
+                    return Some(found)
+                } 
+            }
+        None   
+        }
     }
 
     /// Return a reference to the value carried by the root of this tree

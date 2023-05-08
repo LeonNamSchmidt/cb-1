@@ -3,23 +3,29 @@ use crate::Stack;
 // TODO Complete implementation
 impl Stack for Vec<i32> {
     fn init() -> Self {
-        todo!()
+        Vec::new()
     }
 
     fn push_val(&mut self, i: i32) {
-        todo!()
+        self.push(i);
     }
 
     fn top_val(&self) -> Option<&i32> {
-        todo!()
+        match self.len() {
+            0 => None,
+            n => Some(&self[n-1])
+        }
     }
 
     fn pop_val(&mut self) -> Option<i32> {
-        todo!()
+        self.pop()
     }
 
     fn is_empty(&self) -> bool {
-        todo!()
+        if self.len() == 0 {
+            true
+        } 
+        else { false }
     }
 }
 
@@ -40,13 +46,22 @@ impl Stack for ListStack {
 
     fn push_val(&mut self, i: i32) {
         match self {
-            Val(value, other) => *self = todo!(),
-            Nil => *self = todo!(),
+            Val(value, other) => {                                    
+                let new_top = Val( i, Some(Box::new(Val(*value, other.take()))));
+                *self = new_top;
+            },
+            Nil => {
+                let new_top = Val( i, Some(Box::new(ListStack::Nil)));
+                *self = new_top;
+            }
         };
     }
 
     fn top_val(&self) -> Option<&i32> {
-        todo!()
+        match self {
+            Val(value, _other) => Some(value),                                
+            Nil => None,
+        }
     }
 
     fn pop_val(&mut self) -> Option<i32> {
@@ -55,16 +70,19 @@ impl Stack for ListStack {
                 let popped_value = *value;
                 match other.take() {
                     None => *self = Nil,
-                    Some(other) => todo!(),
+                    Some(other) => *self = *other,
                 };
-                todo!()
+                Some(popped_value)
             }
             Nil => None,
         }
     }
 
     fn is_empty(&self) -> bool {
-        todo!()
+        match self {
+            Val(_value, _other) => false,                                        
+            Nil => true,
+        }
     }
 }
 
